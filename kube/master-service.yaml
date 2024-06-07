@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: spark-master-ui-service
+  namespace: spark
+spec:
+  type: NodePort  # Keeps the service as ClusterIP for internal traffic
+  ports:
+  - name: webui
+    port: 8080
+    targetPort: 8080
+    protocol: TCP
+    nodePort: 32198  # Specify a nodePort to expose on all nodes
+  selector:
+    app: spark-master
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spark-master-service
+  namespace: spark
+spec:
+  type: NodePort  # Keeps the service as ClusterIP for internal traffic
+  ports:
+  - name: master-port
+    port: 7077
+    targetPort: 7077
+    protocol: TCP
+    nodePort: 32177
+  selector:
+    app: spark-master

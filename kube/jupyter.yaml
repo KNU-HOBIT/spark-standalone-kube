@@ -1,0 +1,178 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jupyterlab
+  namespace: spark
+  labels:
+    name: jupyterlab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: jupyterlab
+  template:
+    metadata:
+      labels:
+        name: jupyterlab
+    spec:
+      securityContext:
+        runAsUser: 0
+        fsGroup: 0
+      containers:
+        - name: jupyterlab
+          image: noyusu/my-spark-jupyter:v3
+          imagePullPolicy: IfNotPresent
+          ports:
+          - containerPort: 4040
+          - containerPort: 4041
+          - containerPort: 4042
+          - containerPort: 4043
+          - containerPort: 4044
+          - containerPort: 4045
+          - containerPort: 4046
+          - containerPort: 4047
+          - containerPort: 4048
+          - containerPort: 4049
+          - containerPort: 8888
+          - containerPort: 39337
+          - containerPort: 39338
+          - containerPort: 39339
+          - containerPort: 39340
+          - containerPort: 39341
+          - containerPort: 39342
+          - containerPort: 39343
+          - containerPort: 39344
+          - containerPort: 39345
+          - containerPort: 39346
+          command:
+            - /bin/bash
+            - -c
+            - |
+              start.sh jupyter lab --LabApp.token='password' --LabApp.ip='0.0.0.0' --LabApp.allow_root=True
+          volumeMounts:
+            - name: jupyterlab-data
+              mountPath: /home/scouter
+          resources:
+            requests:
+              memory: 500Mi
+              cpu: 250m
+          env:
+            - name: GRANT_SUDO
+              value: "yes"
+      restartPolicy: Always
+      volumes:
+      - name: jupyterlab-data
+        persistentVolumeClaim:
+          claimName: jupyterlab-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jupyterlab-pvc
+  namespace: spark
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: rook-cephfs
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jupyterlab
+  namespace: spark
+  labels:
+    name: jupyterlab
+spec:
+  type: NodePort
+  ports:
+    - port: 80
+      targetPort: 8888
+      protocol: TCP
+      name: http
+      nodePort: 30480
+    - port: 4040
+      targetPort: 4040
+      protocol: TCP
+      name: spark-app-ui-01
+    - port: 4041
+      targetPort: 4041
+      protocol: TCP
+      name: spark-app-ui-02
+    - port: 4042
+      targetPort: 4042
+      protocol: TCP
+      name: spark-app-ui-03
+    - port: 4043
+      targetPort: 4043
+      protocol: TCP
+      name: spark-app-ui-04
+    - port: 4044
+      targetPort: 4044
+      protocol: TCP
+      name: spark-app-ui-05
+    - port: 4045
+      targetPort: 4045
+      protocol: TCP
+      name: spark-app-ui-06
+    - port: 4046
+      targetPort: 4046
+      protocol: TCP
+      name: spark-app-ui-07
+    - port: 4047
+      targetPort: 4047
+      protocol: TCP
+      name: spark-app-ui-08
+    - port: 4048
+      targetPort: 4048
+      protocol: TCP
+      name: spark-app-ui-09
+    - port: 4049
+      targetPort: 4049
+      protocol: TCP
+      name: spark-app-ui-10
+    - port: 39337
+      targetPort: 39337
+      protocol: TCP
+      name: spark-driver-01
+    - port: 39338
+      targetPort: 39338
+      protocol: TCP
+      name: spark-driver-02
+    - port: 39339
+      targetPort: 39339
+      protocol: TCP
+      name: spark-driver-03
+    - port: 39340
+      targetPort: 39340
+      protocol: TCP
+      name: spark-driver-04
+    - port: 39341
+      targetPort: 39341
+      protocol: TCP
+      name: spark-driver-05
+    - port: 39342
+      targetPort: 39342
+      protocol: TCP
+      name: spark-driver-06
+    - port: 39343
+      targetPort: 39343
+      protocol: TCP
+      name: spark-driver-07
+    - port: 39344
+      targetPort: 39344
+      protocol: TCP
+      name: spark-driver-08
+    - port: 39345
+      targetPort: 39345
+      protocol: TCP
+      name: spark-driver-09
+    - port: 39346
+      targetPort: 39346
+      protocol: TCP
+      name: spark-driver-10
+  selector:
+    name: jupyterlab
+---
