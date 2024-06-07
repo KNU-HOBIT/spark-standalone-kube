@@ -1,4 +1,8 @@
-# Spark Donwload & Config
+# Spark Standalone Kubernetes Deployment Guide
+
+이 리포지토리는 Kubernetes에서 Apache Spark 클러스터를 다운로드, 구성 및 배포하기 위한 포괄적인 지침을 제공합니다. 이 가이드에는 필요한 환경 변수를 설정하고, 구성 파일을 사용자 정의하고, Docker와 Kubernetes를 사용하여 Spark 마스터 및 워커 노드를 배포하는 단계가 포함되어 있습니다.
+
+## Spark Donwload & Config
 
 1. **Spark 다운로드 및 환경변수 설정**:
     ```sh
@@ -41,12 +45,11 @@
     ```
 
 
-# Deploy
+## Deploy
 
 1. Download resources for deploy
     ```
-    git clone http://,,,,
-    
+    git clone https://github.com/KNU-HOBIT/spark-standalone-kube.git
     
     cd spark-standalone-kube
     ```
@@ -64,8 +67,8 @@
     └── worker-service.yaml -> To expose network Spark Worker node
     ``` 
 
-## Deploy Spark Cluster
-
+### Deploy Spark Cluster
+___
 1. Build & Push Spark Cluster Container Image
     ```sh
     cd docker
