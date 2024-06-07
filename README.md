@@ -113,6 +113,8 @@ ___
         ```
     3. Create Spark Master 
         ```sh
+        kubectl create namespace spark
+        
         kubectl create -f master-deploy.yaml master-service.yaml
         ```
         Status Check
