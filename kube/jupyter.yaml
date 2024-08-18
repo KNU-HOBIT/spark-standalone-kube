@@ -50,8 +50,8 @@ spec:
             - |
               start.sh jupyter lab --LabApp.token='password' --LabApp.ip='0.0.0.0' --LabApp.allow_root=True
           volumeMounts:
-            - name: jupyterlab-data
-              mountPath: /home/scouter
+            - name: spark-storage
+              mountPath: /mnt/data
           resources:
             requests:
               memory: 500Mi
@@ -61,22 +61,9 @@ spec:
               value: "yes"
       restartPolicy: Always
       volumes:
-      - name: jupyterlab-data
+      - name: spark-storage
         persistentVolumeClaim:
-          claimName: jupyterlab-pvc
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: jupyterlab-pvc
-  namespace: spark
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 10Gi
-  storageClassName: rook-cephfs
+          claimName: spark-pvc
 ---
 apiVersion: v1
 kind: Service

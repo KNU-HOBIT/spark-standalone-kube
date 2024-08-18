@@ -15,17 +15,22 @@ spec:
     spec:
       containers:
       - name: spark-worker
-        image: noyusu/spark-standalone-3.5.1:v0.0.7
+        image: noyusu/spark-standalone-3.5.1:v0.0.8
         command: ["/bin/bash"]
         args: ["-c", "./sbin/start-worker.sh $SPARK_MASTER_URL & sleep 2; tail -f /opt/spark/logs/spark--org.apache.spark.deploy.worker.Worker-1-*.out"]
         env:
         - name: SPARK_MASTER_URL
-          value: "spark://10.42.2.60:7077"
+          value: "spark://10.42.0.63:7077"
         ports:
         - containerPort: 8081  # Default port for Spark master web UI
         volumeMounts:
         - name: spark-logs
           mountPath: /opt/spark/logs
+        - name: spark-storage
+          mountPath: /mnt/data
       volumes:
       - name: spark-logs
         emptyDir: {}
+      - name: spark-storage
+        persistentVolumeClaim:
+          claimName: spark-pvc

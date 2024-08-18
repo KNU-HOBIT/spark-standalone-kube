@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: spark-master
-        image: noyusu/spark-standalone-3.5.1:v0.0.7
+        image: noyusu/spark-standalone-3.5.1:v0.0.8
         command: ["/bin/bash"]
         args: [
           "-c",

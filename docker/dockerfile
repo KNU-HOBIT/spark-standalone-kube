@@ -16,3 +16,11 @@ COPY spark-home /opt/spark
 
 # Change working directory to $SPARK_HOME
 WORKDIR $SPARK_HOME
+
+RUN apt-get update && \
+    apt-get install -y python3.9-distutils && \
+    wget https://bootstrap.pypa.io/get-pip.py && \
+    python3 get-pip.py && \
+    rm get-pip.py
+
+RUN python3 -m pip install numpy torch torchvision torchaudio pyarrow pandas tqdm kafka-python
