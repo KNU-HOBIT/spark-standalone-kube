@@ -1,15 +1,16 @@
 # 1: cp -r $SPARK_HOME ./spark-home
-# 2: docker build -t noyusu/spark-standalone-3.5.1:v0.0.n .
+# 2: sudo docker build -t yourdockerID/spark-standalone-3.5.1:v0.0.n -f devDockerfile .
 #   -> config v0.0.n, noyusu to yourdockerID
 # 3: rm -rf spark-home/
-# 4: docker push noyusu/spark-standalone-3.5.1:v0.0.n
+# 4: sudo docker push noyusu/spark-standalone-3.5.1:v0.0.n
 #   -> config v0.0.n, noyusu to yourdockerID
+# Last updated : 25/01/14
 
 # Base image
-FROM openjdk:11
+FROM noyusu/spark-standalone-3.5.1:v0.0.16
 
 # Set environment variable based on the build-time argument
-ENV SPARK_HOME /opt/spark
+ENV SPARK_HOME=/opt/spark
 
 # Copy the contents from the local directory to the image's SPARK_HOME directory
 COPY spark-home /opt/spark
@@ -23,6 +24,11 @@ RUN apt-get update && \
     python3 get-pip.py && \
     rm get-pip.py
 
+# Copy the requirements file to the container
+COPY spark_node_requirements.txt /tmp/requirements.txt
+
+# Install Python packages from requirements file
+RUN python3 -m pip install -r /tmp/requirements.txt
+
 RUN chmod 755 /opt/spark/conf/getGpusResources.sh
 
-RUN python3 -m pip install numpy torch torchvision torchaudio pyarrow pandas tqdm kafka-python protobuf==5.27.0 requests lz4

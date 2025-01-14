@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: spark-master
-        image: noyusu/spark-standalone-3.5.1:v0.0.8
+        image: noyusu/spark-standalone-3.5.1:v0.0.17
         command: ["/bin/bash"]
         args: [
           "-c",
@@ -35,3 +35,12 @@ spec:
       volumes:
       - name: spark-logs
         emptyDir: {}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: topology.kubernetes.io/zone
+                  operator: In
+                  values:
+                    - zone-1

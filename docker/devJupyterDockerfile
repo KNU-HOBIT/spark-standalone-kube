@@ -1,0 +1,37 @@
+
+
+
+# cmd $ : sudo docker build -f jupyterDockerfile -t noyusu/my-spark-jupyter:v5 -f devJupyterDockerfile .
+# cmd $ : sudo docker push noyusu/my-spark-jupyter:v5
+
+# 기본 이미지 설정
+FROM noyusu/my-spark-jupyter:v4
+
+USER root
+
+# OpenJDK 설치
+RUN apt-get update && \
+    apt-get install -y openjdk-11-jdk && \
+    rm -rf /var/lib/apt/lists/*
+
+# 환경 변수 설정
+ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+ENV PATH=$PATH:$JAVA_HOME/bin
+
+# Python 버전 변경
+RUN conda install -y python=3.9.18
+
+# pip 패키지 설치를 위한 requirements 파일 복사
+COPY spark_client_requirements.txt /tmp/requirements.txt
+
+# requirements 파일을 이용한 Python 패키지 설치
+RUN pip install -r /tmp/requirements.txt
+
+
+
+
+
+
+
+
+

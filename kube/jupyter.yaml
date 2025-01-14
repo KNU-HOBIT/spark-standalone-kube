@@ -20,7 +20,7 @@ spec:
         fsGroup: 0
       containers:
         - name: jupyterlab
-          image: noyusu/my-spark-jupyter:v3
+          image: noyusu/my-spark-jupyter:v5
           imagePullPolicy: IfNotPresent
           ports:
           - containerPort: 4040
@@ -64,6 +64,15 @@ spec:
       - name: spark-storage
         persistentVolumeClaim:
           claimName: spark-pvc
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: topology.kubernetes.io/zone
+                  operator: In
+                  values:
+                    - zone-1
 ---
 apiVersion: v1
 kind: Service
@@ -84,42 +93,52 @@ spec:
       targetPort: 4040
       protocol: TCP
       name: spark-app-ui-01
+      nodePort: 30481
     - port: 4041
       targetPort: 4041
       protocol: TCP
       name: spark-app-ui-02
+      nodePort: 30482
     - port: 4042
       targetPort: 4042
       protocol: TCP
       name: spark-app-ui-03
+      nodePort: 30483
     - port: 4043
       targetPort: 4043
       protocol: TCP
       name: spark-app-ui-04
+      nodePort: 30484
     - port: 4044
       targetPort: 4044
       protocol: TCP
       name: spark-app-ui-05
+      nodePort: 30485
     - port: 4045
       targetPort: 4045
       protocol: TCP
       name: spark-app-ui-06
+      nodePort: 30486
     - port: 4046
       targetPort: 4046
       protocol: TCP
       name: spark-app-ui-07
+      nodePort: 30487
     - port: 4047
       targetPort: 4047
       protocol: TCP
       name: spark-app-ui-08
+      nodePort: 30488
     - port: 4048
       targetPort: 4048
       protocol: TCP
       name: spark-app-ui-09
+      nodePort: 30489
     - port: 4049
       targetPort: 4049
       protocol: TCP
       name: spark-app-ui-10
+      nodePort: 30490
     - port: 39337
       targetPort: 39337
       protocol: TCP

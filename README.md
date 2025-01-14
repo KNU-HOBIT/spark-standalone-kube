@@ -10,11 +10,20 @@
     rm spark-3.5.1-bin-hadoop3.tgz
 
     # 디렉토리 이동
-    mv spark-3.5.1-bin-hadoop3 /opt/spark
+    sudo mv spark-3.5.1-bin-hadoop3 /opt/spark
+
+    # RAPIDS Accelerator For Apache Spark Distribution 다운로드.
+    # 공식 maven 참고
+    # https://mvnrepository.com/artifact/com.nvidia/rapids-4-spark
+    wget https://repo1.maven.org/maven2/com/nvidia/rapids-4-spark_2.12/24.06.1/rapids-4-spark_2.12-24.06.1.jar
+
+    # .jar를 Spark jars로 이동. 
+    sudo mv rapids-4-spark_2.12-24.06.1.jar /opt/spark/jars 
 
     # SPARK_HOME 환경변수 설정
     echo 'export SPARK_HOME=/opt/spark' >> ~/.bashrc
     echo 'export PATH=$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin' >> ~/.bashrc
+
     source ~/.bashrc
 
     # 설정 확인
@@ -26,10 +35,13 @@
     # spark-env.sh 생성.
     cp $SPARK_HOME/conf/spark-env.sh.template $SPARK_HOME/conf/spark-env.sh
 
-    # 각 워커 노드의 코어, 메모리 할당량 설정.
+    # 각 워커 노드의 코어, 메모리 할당량, GPU 사용량 및 GPU 조회 파일 경로 설정.
     echo 'export SPARK_WORKER_CORES=16' >> $SPARK_HOME/conf/spark-env.sh
     echo 'export SPARK_WORKER_MEMORY=24g' >> $SPARK_HOME/conf/spark-env.sh
+    echo 'export SPARK_WORKER_OPTS="-Dspark.worker.resource.gpu.amount=4 -Dspark.worker.resource.gpu.discoveryScript=/opt/spark/conf/getGpusResources.sh' >> $SPARK_HOME/conf/spark-env.sh
     ```
+    GPU 조회 파일은 [공식Github](https://github.com/apache/spark/blob/master/examples/src/main/scripts/getGpusResources.sh)를 참고하여 `/opt/spark/conf/` 에 `getGpusResources.sh`를 생성
+    
 3. **Spark Conf 추가 및 설정 2**
     ```sh
     # spark-defaults.conf 생성.
